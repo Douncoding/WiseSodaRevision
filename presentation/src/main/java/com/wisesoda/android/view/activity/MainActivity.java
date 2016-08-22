@@ -1,7 +1,10 @@
-package com.wisesoda.android;
+package com.wisesoda.android.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.wisesoda.android.R;
+import com.wisesoda.android.view.fragment.SignFragment;
 
 public class MainActivity extends AppCompatActivity {
 

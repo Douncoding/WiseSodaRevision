@@ -1,4 +1,4 @@
-package com.wisesoda.android;
+package com.wisesoda.android.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.wisesoda.android.R;
 
 public class SignFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener,
     View.OnClickListener {

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 배경 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/sm_back_1"
+            android:scaleType="centerCrop"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#A0014B61"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 로고 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:text="@string/app_name"/>
+        </RelativeLayout>
+
+        <!-- 버튼 그룹 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- 카카오 버튼 -->
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                style="@style/AuthLoginButton.Background">
+                <RelativeLayout
+                    android:id="@+id/kakao_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/kakao"
+                    android:background="@drawable/bg_corner_radius">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_centerVertical="true"
+                        android:tint="@color/kakaoText"
+                        android:src="@drawable/ic_kakao_logo"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/kakaoText"
+                        style="@style/AuthLoginButton.TextAppearance"
+                        android:text="Log in with Kakao"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                style="@style/AuthLoginButton.Background">
+                <RelativeLayout
+                    android:id="@+id/facebook_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/facebook"
+                    android:background="@drawable/bg_corner_radius">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_centerVertical="true"
+                        android:tint="@color/white"
+                        android:src="@drawable/ic_facebook_logo"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        style="@style/AuthLoginButton.TextAppearance"
+                        android:text="@string/auth_login_facebook"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                style="@style/AuthLoginButton.Background">
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/google_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/google_login"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:backgroundTint="@color/googleplus"-->
+                    <!--android:background="@drawable/bg_corner_radius">-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="30dp"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:layout_marginStart="16dp"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:tint="@color/white"-->
+                        <!--android:src="@drawable/ic_google_plus_logo"/>-->
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerInParent="true"-->
+                        <!--style="@style/AuthLoginButton.TextAppearance"-->
+                        <!--android:text="@string/auth_login_googleplus"/>-->
+                <!--</RelativeLayout>-->
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                style="@style/AuthLoginButton.Background">
+                <RelativeLayout
+                    android:id="@+id/wechat_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/wechat"
+                    android:background="@drawable/bg_corner_radius">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_centerVertical="true"
+                        android:tint="@color/white"
+                        android:src="@drawable/ic_wechat_logo"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        style="@style/AuthLoginButton.TextAppearance"
+                        android:text="@string/auth_login_wechat"/>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

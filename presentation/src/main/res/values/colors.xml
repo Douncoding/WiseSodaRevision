@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#4DACC9</color>
+    <color name="colorPrimaryDark">#014B61</color>
+    <color name="colorPrimaryLight">#D4F5FF</color>
+    <color name="colorAccent">#012A37</color>
+    <color name="facebook">#3b5998</color>
+    <color name="googleplus">#d34836</color>
+    <color name="kakao">#FED90B</color>
+    <color name="kakaoText">#2d1617</color>
+    <color name="wechat">#24bc00</color>
+
+
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondText">#757575</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDividerLight">#F1F1F1</color>
+    <color name="colorDividerOther">#C9D1D1</color>
+    <color name="colorBackground">#f9f9f9</color>
+    <color name="white">#FFF</color>
 </resources>

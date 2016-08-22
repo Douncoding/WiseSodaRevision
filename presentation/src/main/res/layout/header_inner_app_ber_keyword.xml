@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDividerLight"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/place"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/white"
+            android:src="@drawable/ic_placeholder_line"
+            android:background="@drawable/bg_circle_button_focus"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/restaurant"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/colorDivider"
+            android:src="@drawable/ic_cutlery"
+            android:background="@drawable/bg_circle_button_normal"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/rooms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/colorDivider"
+            android:src="@drawable/ic_bed_line"
+            android:background="@drawable/bg_circle_button_normal"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/shopping"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/colorDivider"
+            android:src="@drawable/ic_shopping_line"
+            android:background="@drawable/bg_circle_button_normal"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/transport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/colorDivider"
+            android:src="@drawable/ic_bus_line"
+            android:background="@drawable/bg_circle_button_normal"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+    <com.wisesoda.android.view.components.SquareLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:padding="4dp">
+        <ImageButton
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tint="@color/colorDivider"
+            android:src="@drawable/ic_smartphone_line"
+            android:background="@drawable/bg_circle_button_normal"/>
+    </com.wisesoda.android.view.components.SquareLinearLayout>
+
+</LinearLayout>

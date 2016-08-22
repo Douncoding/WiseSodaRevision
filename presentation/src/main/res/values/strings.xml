@@ -1,3 +1,29 @@
 <resources>
-    <string name="app_name">WiseSoda</string>
+    <string name="app_name">와이즈소다</string>
+    <string name="app_name_en">WiseSoda</string>
+    <string name="title_activity_blogs">Keyword</string>
+    <string name="title_acitivty_keywordlist">City</string>
+
+    <string name="empty_keyword_title">죄송합니다. 검색 결과가 없습니다.\n추후에 다시 시도하세요.</string>
+
+    <string name="dialog_chrome_install_title">Chrome 을 설치 하겠습니까?</string>
+    <string name="dialog_chrome_install_content">크롬을 설치해야지만 본 서비스를 이용하실 수 있습니다.</string>
+    <string name="dialog_gmap_install_title">Google Map 을 설치 하시겠습니까?</string>
+    <string name="dialog_gmap_install_content">구글맵을 설치해야지만 본 서비스를 이용하실 수 있습니다.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="exception_message_generic">There was an application error</string>
+    <string name="exception_message_no_connection">There is no internet connection</string>
+    <string name="exception_message_user_not_found">Cannot retrieve user data. Check your internet connection</string>
+
+    <string name="auth_login_kakao">Log in with Kakao</string>
+    <string name="auth_login_facebook">Log in with Facebook</string>
+    <string name="auth_login_googleplus">Log in with Goolge+</string>
+    <string name="auth_login_wechat">Log in with WeChat</string>
+
+
+    <string name="kakao_app_key">02c85e7d89dcefea7501837b8b96480b</string>
+    <string name="facebook_app_id">893853507388036</string>
 </resources>
