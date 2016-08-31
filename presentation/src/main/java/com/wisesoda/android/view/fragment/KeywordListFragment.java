@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
 import com.wisesoda.android.internal.di.components.DaggerGroupComponent;
 import com.wisesoda.android.internal.di.modules.GroupModule;
+import com.wisesoda.android.model.GroupModel;
 import com.wisesoda.android.model.KeywordModel;
 import com.wisesoda.android.model.constant.Category;
 import com.wisesoda.android.presenter.GroupListPresenter;
@@ -51,12 +53,21 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
     @Inject
     GroupListPresenter groupListPresenter;
 
-    String city;
-    String category;
-    String period;
+    private String period;
+    private String city;
+    private String category;
 
-    public static KeywordListFragment getInstance() {
-        return new KeywordListFragment();
+    private static final String PARAMS_KEYWORD_PERIOD = "PARAMS_KEYWORD_PERIOD";
+    private static final String PARAMS_KEYWORD_CITY = "PARAMS_KEYWORD_CITY";
+    private static final String PARAMS_KEYWORD_CATEGORY = "PARAMS_KEYWORD_CATEGORY";
+    public static KeywordListFragment getInstance(String city, String category, String period) {
+        Bundle args = new Bundle();
+        args.putString(PARAMS_KEYWORD_CITY, city);
+        args.putString(PARAMS_KEYWORD_CATEGORY, category);
+        args.putString(PARAMS_KEYWORD_PERIOD, period);
+        KeywordListFragment fragment = new KeywordListFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -70,8 +81,8 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.initializeFragment();
         this.initializeInjector();
-        Log.e(Constants.VIEW_TAG, "KeywordListFragment#onCreate():");
     }
 
 
@@ -88,7 +99,9 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.groupListPresenter.setView(this);
-        this.groupListPresenter.initialize();
+        this.groupListPresenter.getKeywordList(city, category, period);
+        recyclerView.setVisibility(View.VISIBLE);
+
         Log.e(Constants.VIEW_TAG, "KeywordListFragment#onViewCreated():");
     }
 
@@ -123,13 +136,18 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
         this.keywordListListener = null;
     }
 
-
     public void initializeInjector() {
         DaggerGroupComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .groupModule(new GroupModule())
                 .build()
                 .inject(this);
+    }
+
+    public void initializeFragment() {
+        city = getArguments().getString(PARAMS_KEYWORD_CITY);
+        category = getArguments().getString(PARAMS_KEYWORD_CATEGORY);
+        period = getArguments().getString(PARAMS_KEYWORD_PERIOD);
     }
 
     /**
