@@ -1,18 +1,19 @@
 package com.wisesoda.android.view.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -46,27 +47,21 @@ import butterknife.ButterKnife;
 public class GroupListActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener, KeywordListFragment.KeywordListListener {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.app_bar)
-    AppBarLayout mAppBarLayout;
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-    @BindView(R.id.viewpager)
-    ViewPager mViewPager;
-    @BindView(R.id.tabs)
-    SmartTabLayout mTabLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.app_bar)AppBarLayout mAppBarLayout;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.viewpager) ViewPager mViewPager;
+    @BindView(R.id.tabs) SmartTabLayout mTabLayout;
     @BindView(R.id.spinner) Spinner mSpinner;
-    @BindView(R.id.header)
-    GroupListHeaderView mHeader;
+    @BindView(R.id.header) GroupListHeaderView mHeader;
 
     private List<String> cityList;
 
-    private ViewPagerAdapter viewPagerAdapter;
+
     private int mLastHeaderPosition = 0;
     private int mLastSpinnerPosition = 0;
+    private ViewPagerAdapter mViewPagerAdapter;
 
     // 로딩된 도시목록
     public static final String EXTRA_CITY_LIST = "EXTRA_CITY_LIST";
@@ -112,9 +107,14 @@ public class GroupListActivity extends BaseActivity implements
                         groupModel.getCity(), groupModel.getKeyword(), groupModel.getCategory());
             }
         }
-
         setUpDrawerLayout();
         setupTabLayout();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mViewPagerAdapter = null;
     }
 
     @Override
@@ -204,15 +204,19 @@ public class GroupListActivity extends BaseActivity implements
 
 
     private void setupTabLayout() {
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+        String city = mSpinner.getSelectedItem().toString();
+        String category = mHeader.getSelectedCategoryText();
         Period[] types = Period.values();
         for (Period type : types) {
-            viewPagerAdapter.addFragment(KeywordListFragment.getInstance(), type.name());
+            mViewPagerAdapter.addFragment(
+                    KeywordListFragment.getInstance(city, category, type.name()), type.name());
         }
 
-        mViewPager.setAdapter(viewPagerAdapter);
+        mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setViewPager(mViewPager);
+        mViewPagerAdapter.notifyDataSetChanged();
 
         mHeader.setOnItemClickedListener(onHeaderClickListener);
         mSpinner.setOnItemSelectedListener(onSpinnerItemSelectedListener);
@@ -224,7 +228,7 @@ public class GroupListActivity extends BaseActivity implements
         public void onChanged(int position) {
             if (mLastHeaderPosition != position) {
                 mLastHeaderPosition = position;
-                viewPagerAdapter.onUpdatePage();
+                setupTabLayout();
             }
         }
     };
@@ -235,20 +239,19 @@ public class GroupListActivity extends BaseActivity implements
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
             if (mLastSpinnerPosition != position) {
                 mLastSpinnerPosition = position;
-                viewPagerAdapter.onUpdatePage();
+                setupTabLayout();
             }
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
-
-        }
+        public void onNothingSelected(AdapterView<?> adapterView) {}
     };
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private boolean isUpdate = false;
-        private int mLastActionedPrimaryItemPosition = -1;
-
+    /**
+     * {@link GroupListHeaderView}의 상태에 따라 새로운 프라그먼트를 생성해야 하기 때문에 Fragment 재사용하는
+     * {@link FragmentPagerAdapter} 를 사용하지 않는다.
+     * */
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<BaseFragment> mFragmentList = new ArrayList<>();
         private final List<String> mTitleList = new ArrayList<>();
 
@@ -266,46 +269,14 @@ public class GroupListActivity extends BaseActivity implements
             return mFragmentList.size();
         }
 
+        @Override
+        public int getItemPosition(Object object){
+            return PagerAdapter.POSITION_NONE;
+        }
+
         public void addFragment(BaseFragment fragment, String title) {
             mFragmentList.add(fragment);
             mTitleList.add(title);
-        }
-
-        /**
-         * 프라그먼트 업데이트 요청
-         * {@link ViewPagerAdapter#finishUpdate(ViewGroup)} 호출 이후 발생하도록 해야만 한다.
-         */
-        private void onUpdatePage() {
-            String city = mSpinner.getSelectedItem().toString();
-            String category = mHeader.getSelectedCategoryText();
-            String period = Period.values()[mLastActionedPrimaryItemPosition].name();
-
-            for (int i = 0; i < mFragmentList.size(); i++) {
-                KeywordListFragment fragment = (KeywordListFragment)mFragmentList.get(i);
-                if (mLastActionedPrimaryItemPosition == i) {
-                    fragment.onVisiblePage(city, category, period);
-                } else {
-                    fragment.onInvisiblePage();
-                }
-            }
-        }
-
-        @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            super.setPrimaryItem(container, position, object);
-            if (mLastActionedPrimaryItemPosition != position) {
-                mLastActionedPrimaryItemPosition = position;
-                isUpdate = true;
-            }
-        }
-
-        @Override
-        public void finishUpdate(ViewGroup container) {
-            super.finishUpdate(container);
-            if (isUpdate) {
-                isUpdate = false;
-                onUpdatePage();
-            }
         }
 
         @Override
