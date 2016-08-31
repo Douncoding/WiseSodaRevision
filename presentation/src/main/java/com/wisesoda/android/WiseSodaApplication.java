@@ -2,6 +2,7 @@ package com.wisesoda.android;
 
 import android.app.Application;
 
+import com.google.android.gms.ads.MobileAds;
 import com.wisesoda.android.internal.di.components.ApplicationComponent;
 import com.wisesoda.android.internal.di.components.DaggerApplicationComponent;
 import com.wisesoda.android.internal.di.modules.ApplicationModule;

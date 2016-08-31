@@ -113,16 +113,26 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/bookmark_action"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_weight="1"
                         android:gravity="center_vertical">
-                        <ImageView
+                        <!--<ImageView-->
+                            <!--android:layout_width="16dp"-->
+                            <!--android:layout_height="16dp"-->
+                            <!--android:tint="@color/colorDivider"-->
+                            <!--android:src="@drawable/ic_bookmark_fill"/>-->
+                        <com.sackcentury.shinebuttonlib.ShineButton
+                            android:id="@+id/bookmark_icon"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:tint="@color/colorDivider"
-                            android:src="@drawable/ic_bookmark_fill"/>
+                            android:src="@color/colorDivider"
+                            app:btn_color="@color/colorDivider"
+                            app:btn_fill_color="@color/colorPrimary"
+                            app:allow_random_color="false"
+                            app:siShape="@drawable/ic_bookmark_fill"/>
                         <TextView
                             android:id="@+id/bookmark_count"
                             android:layout_width="wrap_content"
@@ -151,7 +161,7 @@
                         android:textColor="@color/colorSecondText"/>
 
                     <ImageView
-                        android:id="@+id/shared"
+                        android:id="@+id/shared_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"

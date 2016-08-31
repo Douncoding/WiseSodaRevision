@@ -2,8 +2,11 @@ package com.wisesoda.android.internal.di.modules;
 
 import android.content.Context;
 
+import com.kakao.kakaolink.KakaoLink;
+import com.kakao.util.KakaoParameterException;
 import com.wisesoda.android.UIThread;
 import com.wisesoda.android.WiseSodaApplication;
+import com.wisesoda.android.WiseSodaStateManager;
 import com.wisesoda.data.cache.BlogCache;
 import com.wisesoda.data.cache.BlogCacheImpl;
 import com.wisesoda.data.executor.JobExecutor;
@@ -64,5 +67,11 @@ public class ApplicationModule {
     @Singleton
     GroupRepository provideGroupRepository(GroupDataRepository groupDataRepository) {
         return groupDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    WiseSodaStateManager provideWiseSodaStateManager(WiseSodaStateManager wiseSodaStateManager) {
+        return wiseSodaStateManager;
     }
 }

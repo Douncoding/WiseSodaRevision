@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.wisesoda.android.R;
 import com.wisesoda.android.internal.di.components.DaggerBlogComponent;
@@ -21,6 +23,7 @@ import com.wisesoda.android.presenter.BlogListPresenter;
 import com.wisesoda.android.view.BlogListView;
 import com.wisesoda.android.view.adapter.BlogAdapter;
 import com.wisesoda.android.view.components.EndlessRecyclerOnScrollListener;
+import com.wisesoda.android.view.dialog.RequireLoginDialog;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,26 +38,26 @@ import butterknife.ButterKnife;
  */
 public class BlogListFragment extends BaseFragment implements BlogListView {
     public interface BlogListListener {
-        /**
-         * @param blogModel 선택된 블로그
-         */
+        // 블로그 선택
         void onBlogClicked(final BlogModel blogModel);
-
-        /**
-         * {@link BlogListFragment} 초기화 완료
-         * @param blogModelList 이미지 리스트
-         */
+        // 초기화 완료
         void onVisibleToFinished(List<BlogModel> blogModelList);
+        // 회원가입 화면 이동필요
+        void onSignUpNavigate();
+        // 공유 버튼 클릭
+        void onShareClicked(BlogModel blogModel);
+        // 블로그 평가 화면 요청
+        void onNeedsRatingView(String jsonBlog);
     }
 
-    @BindView(R.id.blog_list)
-    RecyclerView recyclerView;
+    @BindView(R.id.blog_list) RecyclerView recyclerView;
     @BindView(R.id.blog_progress_bar) ProgressBar progressBar;
 
     @Inject BlogListPresenter blogListPresenter;
     @Inject BlogAdapter blogAdapter;
 
     private BlogListListener blogListListener;
+
     private String sortType;
     private GroupModel groupModel;
 
@@ -124,6 +127,9 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // 북마크 애니메이션 설정
+        blogAdapter.setBookmarkAnimation(getActivity());
+
         this.blogListPresenter.setView(this);
         this.blogListPresenter.getFirstBlogList();
     }
@@ -131,7 +137,8 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     @Override
     public void onResume() {
         super.onResume();
-        this.blogListPresenter.resume();
+
+        Log.e("CHECK", "onResume()");
     }
 
     @Override
@@ -148,11 +155,6 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         this.blogListListener = null;
@@ -162,7 +164,6 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
-
         if (isVisibleToUser && isInitialize) {
             activityDependentView();
         }
@@ -173,6 +174,19 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
         isInitialize = true;
         if (isVisibleToUser) {
             activityDependentView();
+        }
+    }
+
+    /**
+     * TabLayout 에서 Fragment 의 생존주기를 관리하는 부분의 경험 부족으로 코드가 어려워 지고 있다.
+     *
+     * TabLayout 에 노출된 프라그먼트의 갱신을 위한 로직이며, 액티비티에서 ViewPager 의 현재 값을 확인 후
+     * 호춣하게된다.
+     */
+    public void userVisibleWithResume() {
+        if (isInitialize) {
+            this.blogListPresenter.resume();
+            this.blogAdapter.notifyDataSetChanged();
         }
     }
 
@@ -188,7 +202,7 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     @Override
     public void renderBlogList(Collection<BlogModel> blogModelCollection) {
         if (blogModelCollection != null) {
-            this.blogAdapter.setBlogCollection(blogModelCollection);
+            this.blogAdapter.setBlogList(blogModelCollection);
         }
     }
 
@@ -217,16 +231,59 @@ public class BlogListFragment extends BaseFragment implements BlogListView {
     }
 
     @Override
-    public Context context() {
-        return this.getActivity().getApplication();
+    public void showBookmarkStateMessage(boolean state) {
+        showMessage(""+state);
     }
 
+    @Override
+    public void viewRequireLogin() {
+        RequireLoginDialog dialog = new RequireLoginDialog();
+        dialog.setOnDialogCallback(new RequireLoginDialog.OnCallback() {
+            @Override
+            public void onPositive() {
+                blogListListener.onSignUpNavigate();
+            }
+
+            @Override
+            public void onNegative() {
+
+            }
+        });
+        dialog.show(getFragmentManager(), RequireLoginDialog.TAG);
+    }
+
+    @Override
+    public void viewRequireRating(String jsonBlog) {
+        if (blogListPresenter != null) {
+            blogListListener.onNeedsRatingView(jsonBlog);
+        }
+    }
+
+    /**
+     * {@link BlogAdapter.OnItemClickListener} 리스너 정의
+     */
     private BlogAdapter.OnItemClickListener onItemClickListener =
         new BlogAdapter.OnItemClickListener() {
             @Override
             public void onUserItemClicked(BlogModel blog) {
                 if (BlogListFragment.this.blogListPresenter != null && blog != null) {
                     BlogListFragment.this.blogListPresenter.onBlogClicked(blog);
+                }
+            }
+
+            @Override
+            public void onBookmarkClicked(View view, BlogModel blog) {
+                // 북마크의 상태가 어댑터에서 갱신되어 있는 상태
+                if (blog.isBookmark())
+                    blogListPresenter.addBookmark(blog);
+                else
+                    blogListPresenter.removeBookmark();
+            }
+
+            @Override
+            public void onSharedClicked(View view, BlogModel blog) {
+                if (BlogListFragment.this.blogListListener != null && blog != null) {
+                    BlogListFragment.this.blogListListener.onShareClicked(blog);
                 }
             }
         };

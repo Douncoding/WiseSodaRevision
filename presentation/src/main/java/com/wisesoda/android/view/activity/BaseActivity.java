@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.wisesoda.android.Navigator;
 import com.wisesoda.android.WiseSodaApplication;
+import com.wisesoda.android.WiseSodaStateManager;
 import com.wisesoda.android.internal.di.components.ApplicationComponent;
 import com.wisesoda.android.internal.di.modules.ActivityModule;
 

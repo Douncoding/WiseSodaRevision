@@ -2,6 +2,7 @@ package com.wisesoda.android.view.fragment;
 
 
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 //import com.wisesoda.android.presentation.WiseSodaApplication;
 //import com.wisesoda.android.internal.di.HasComponent;
@@ -21,5 +22,9 @@ public class BaseFragment extends Fragment {
 
     protected ApplicationComponent getApplicationComponent() {
         return ((WiseSodaApplication)(getActivity().getApplication())).getApplicationComponent();
+    }
+
+    protected void showMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 }

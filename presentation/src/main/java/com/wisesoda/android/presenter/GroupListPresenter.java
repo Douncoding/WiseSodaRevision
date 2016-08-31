@@ -2,9 +2,6 @@ package com.wisesoda.android.presenter;
 
 import android.support.annotation.NonNull;
 
-//import com.wisesoda.android.model.KeywordModel;
-//import com.wisesoda.android.model.mapper.KeywordModelDataMapper;
-
 import com.wisesoda.android.model.KeywordModel;
 import com.wisesoda.android.model.mapper.KeywordModelDataMapper;
 import com.wisesoda.android.view.KeywordListView;
@@ -16,7 +13,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import rx.Subscriber;
 
 /**

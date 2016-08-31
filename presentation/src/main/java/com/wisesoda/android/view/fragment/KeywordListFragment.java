@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
 import com.wisesoda.android.internal.di.components.DaggerGroupComponent;
 import com.wisesoda.android.internal.di.modules.GroupModule;
@@ -68,19 +70,16 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DaggerGroupComponent.builder()
-                .applicationComponent(getApplicationComponent())
-                .groupModule(new GroupModule())
-                .build().inject(this);
+        this.initializeInjector();
+        Log.e(Constants.VIEW_TAG, "KeywordListFragment#onCreate():");
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_group_list, container, false);
         ButterKnife.bind(this, view);
-
         setupRecyclerView();
         return view;
     }
@@ -90,12 +89,14 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
         super.onViewCreated(view, savedInstanceState);
         this.groupListPresenter.setView(this);
         this.groupListPresenter.initialize();
+        Log.e(Constants.VIEW_TAG, "KeywordListFragment#onViewCreated():");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         this.groupListPresenter.resume();
+        Log.e(Constants.VIEW_TAG, "KeywordListFragment#onResume():");
     }
 
     @Override
@@ -122,6 +123,15 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
         this.keywordListListener = null;
     }
 
+
+    public void initializeInjector() {
+        DaggerGroupComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .groupModule(new GroupModule())
+                .build()
+                .inject(this);
+    }
+
     /**
      * 액티비티 의존 생존주기 #OnResume()
      */
@@ -130,8 +140,13 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
         this.category = category;
         this.period = period;
 
-        groupListPresenter.getKeywordList(city, category, period);
-        recyclerView.setVisibility(View.VISIBLE);
+        if (groupListPresenter != null) {
+            Log.e(Constants.VIEW_TAG, "groupListPresenter");
+            groupListPresenter.getKeywordList(city, category, period);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            Log.e(Constants.VIEW_TAG, "groupListPresenter is null");
+        }
     }
 
     /**
@@ -204,7 +219,6 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
                     emptyView.setIcoSrouceImage(R.drawable.ic_smartphone_line);
                     break;
             }
-
             emptyView.setVisibility(View.VISIBLE);
         }
     }
@@ -232,10 +246,5 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
     @Override
     public void showError(String message) {
 
-    }
-
-    @Override
-    public Context context() {
-        return null;
     }
 }

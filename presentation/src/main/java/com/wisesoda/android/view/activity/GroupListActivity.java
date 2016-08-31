@@ -1,7 +1,10 @@
 package com.wisesoda.android.view.activity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -14,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +27,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
+import com.wisesoda.android.model.GroupModel;
 import com.wisesoda.android.model.KeywordModel;
 import com.wisesoda.android.model.constant.Period;
 import com.wisesoda.android.view.components.GroupListHeaderView;
@@ -62,27 +68,53 @@ public class GroupListActivity extends BaseActivity implements
     private int mLastHeaderPosition = 0;
     private int mLastSpinnerPosition = 0;
 
+    // 로딩된 도시목록
     public static final String EXTRA_CITY_LIST = "EXTRA_CITY_LIST";
-
+    /**
+     * 블로그 목록으로 즉시 이동 설정
+     * {@link com.wisesoda.android.model.GroupModel} 값이 설정되어 있는 경우 활성화
+     */
+    public static final String EXTRA_DIRECT_BLOGLIST = "EXTRA_DIRECT_BLOGLIST";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         ButterKnife.bind(this);
-
         this.initializeActivity(savedInstanceState);
-
-        setUpDrawerLayout();
-
-        setupTabLayout();
     }
 
+    /**
+     * 액티비티가 재활용되는 경우
+     * - 카카오톡 공유기능에 의해 발생하는 경우
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        this.initializeActivity(null);
+    }
+
+    /**
+     * 액티비티 초기화 (화면 구성을 위한 인텐트 처리)
+     */
     private void initializeActivity(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             cityList = getIntent().getStringArrayListExtra(EXTRA_CITY_LIST);
         } else {
-            cityList = getIntent().getStringArrayListExtra(EXTRA_CITY_LIST);
+            Intent intent = getIntent();
+            cityList = intent.getStringArrayListExtra(EXTRA_CITY_LIST);
+
+            String jsonGroup = intent.getStringExtra(EXTRA_DIRECT_BLOGLIST);
+            Log.d(Constants.VIEW_TAG, "즉시 블로그 목록 활성상태:" + jsonGroup);
+            if (jsonGroup != null) {
+                GroupModel groupModel = GroupModel.create(jsonGroup);
+                navigator.navigateToBlogList(this,
+                        groupModel.getCity(), groupModel.getKeyword(), groupModel.getCategory());
+            }
         }
+
+        setUpDrawerLayout();
+        setupTabLayout();
     }
 
     @Override
@@ -91,7 +123,6 @@ public class GroupListActivity extends BaseActivity implements
                 GroupListActivity.EXTRA_CITY_LIST, new ArrayList<>(cityList));
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -114,6 +145,8 @@ public class GroupListActivity extends BaseActivity implements
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setItemIconTintList(
+                ContextCompat.getColorStateList(this, R.drawable.nav_item_tintlist));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getApplicationContext(), android.R.layout.simple_spinner_item, cityList);
@@ -125,7 +158,19 @@ public class GroupListActivity extends BaseActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+        switch (item.getItemId()) {
+            case R.id.nav_bookmark:
+                navigator.navigateToBookmark(this);
+                break;
+            case R.id.nav_signup:
+                navigator.navigateToUserMgmt(this);
+                break;
+            case R.id.nav_settings:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -156,8 +201,6 @@ public class GroupListActivity extends BaseActivity implements
         this.navigator.navigateToGoogleMap(GroupListActivity.this,
                 keywordModel.getCity(), keywordModel.getTitle());
     }
-
-
 
 
     private void setupTabLayout() {

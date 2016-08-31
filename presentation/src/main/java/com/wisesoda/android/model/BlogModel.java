@@ -14,6 +14,9 @@ public class BlogModel {
     int viewsCount;
     float rate;
 
+    boolean isBookmark;
+    boolean isRead;
+
     /**
      * 블로그 목록 중 대표 블로그 표기
      */
@@ -105,8 +108,32 @@ public class BlogModel {
         return imageRepresent;
     }
 
+    public boolean isBookmark() {
+        return isBookmark;
+    }
+
+    public void setBookmark(boolean bookmark) {
+        isBookmark = bookmark;
+    }
+
+    public void setRepresent(boolean represent) {
+        isRepresent = represent;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public static BlogModel create(String json) {
+        return new Gson().fromJson(json, BlogModel.class);
     }
 }

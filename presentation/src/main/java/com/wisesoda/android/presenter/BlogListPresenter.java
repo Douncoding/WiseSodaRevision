@@ -1,7 +1,9 @@
 package com.wisesoda.android.presenter;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.wisesoda.android.WiseSodaStateManager;
 import com.wisesoda.android.model.BlogModel;
 import com.wisesoda.android.model.mapper.BlogModelDataMapper;
 import com.wisesoda.android.view.BlogListView;
@@ -26,7 +28,11 @@ public class BlogListPresenter implements Presenter {
     private BlogListView blogListView;
 
     private final UseCase getBlogListUseCase;
+    private final UseCase addBookmarkUseCase;
+    private final UseCase removeBookmarkUseCase;
+
     private final BlogModelDataMapper blogModelDataMapper;
+    private final WiseSodaStateManager wiseSodaStateManager;
 
     private List<BlogModel> blogModelList;
 
@@ -34,8 +40,15 @@ public class BlogListPresenter implements Presenter {
 
     @Inject
     public BlogListPresenter(@Named("blogList") UseCase getBlogListUseCase,
+                             @Named("addBookmark") UseCase addBookmarkUseCase,
+                             @Named("removeBookmark") UseCase removeBookmarkUseCase,
+                             WiseSodaStateManager wiseSodaStateManager,
                              BlogModelDataMapper blogModelDataMapper) {
         this.getBlogListUseCase = getBlogListUseCase;
+        this.addBookmarkUseCase = addBookmarkUseCase;
+        this.removeBookmarkUseCase = removeBookmarkUseCase;
+
+        this.wiseSodaStateManager = wiseSodaStateManager;
         this.blogModelDataMapper = blogModelDataMapper;
         this.blogModelList = new ArrayList<>();
     }
@@ -45,7 +58,12 @@ public class BlogListPresenter implements Presenter {
     }
 
     @Override
-    public void resume() {}
+    public void resume() {
+        String jsonBlog = wiseSodaStateManager.needRating();
+        if (jsonBlog != null) {
+            blogListView.viewRequireRating(jsonBlog);
+        }
+    }
 
     @Override
     public void pause() {}
@@ -75,8 +93,48 @@ public class BlogListPresenter implements Presenter {
     }
 
     public void onBlogClicked(BlogModel blogModel) {
+        // 블로그 평가 상태 변경
+        wiseSodaStateManager.changeStateToRating(blogModel.toString());
+
+        // 블로그 실행
         this.blogListView.viewBlog(blogModel);
     }
+
+    /**
+     * 북마크의 추가는 로그인 되어 있는 사용자만 수행할 수 있다.
+     * 1. 로그인 확인 -> 로그인 상태 -> 북마크 추가
+     * 2. 로그인 확인 -> 로그아웃 상태 -> 회원가입 -> 북마크 추가
+     * 3. 로그인 확인 -> 로그아웃 상태 -> 로그인 -> 북마크 추가
+     */
+    public void addBookmark(BlogModel blog) {
+        if (wiseSodaStateManager.isLogin()) {
+            addBookmarkUseCase.execute(new BookmarkSubscriber());
+        } else {
+            blogListView.viewRequireLogin();
+        }
+    }
+
+    public void removeBookmark() {
+        removeBookmarkUseCase.execute(new BookmarkSubscriber());
+    }
+
+    private final class BookmarkSubscriber extends Subscriber<Boolean> {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(Boolean aBoolean) {
+            blogListView.showBookmarkStateMessage(aBoolean);
+        }
+    }
+
 
     private final class BlogListSubscriber extends Subscriber<List<Blog>> {
         @Override

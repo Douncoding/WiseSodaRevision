@@ -16,6 +16,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
 import com.wisesoda.android.model.BlogModel;
 import com.wisesoda.android.model.GroupModel;
@@ -41,25 +44,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BlogListActivity extends BaseActivity implements BlogListFragment.BlogListListener {
-
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.app_bar)
-    AppBarLayout mAppBarLayout;
-    @BindView(R.id.collaps)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @BindView(R.id.viewpager)
-    ViewPager mViewPager;
-    @BindView(R.id.tabs)
-    SmartTabLayout mTabLayout;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.app_bar) AppBarLayout mAppBarLayout;
+    @BindView(R.id.collaps) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.viewpager) ViewPager mViewPager;
+    @BindView(R.id.tabs) SmartTabLayout mTabLayout;
+    @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.slider) ImageSlider mSliderLayout;
     @BindView(R.id.header_content) ViewGroup mHeaderContent;
     @BindView(R.id.header_city_txt) TextView mCityText;
     @BindView(R.id.header_keyword_txt) TextView mKeywordText;
-    @BindView(R.id.header_category_icon)
-    FloatingActionButton mCategoryIcon;
+    @BindView(R.id.header_category_icon) FloatingActionButton mCategoryIcon;
 
     private ViewPagerAdapter mViewPagerAdapter;
 
@@ -190,6 +185,46 @@ public class BlogListActivity extends BaseActivity implements BlogListFragment.B
     @Override
     public void onVisibleToFinished(List<BlogModel> blogModelList) {
         mSliderLayout.setImageCollection(blogModelList);
+    }
+
+
+    @Override
+    public void onShareClicked(final BlogModel blogModel) {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
+        builder.items(R.array.share_type_chooser);
+        builder.itemsColor(ContextCompat.getColor(this, R.color.colorPrimaryText));
+        builder.itemsCallback(new MaterialDialog.ListCallback() {
+            @Override
+            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                if (position == 0) {
+                    navigator.navigateToKakaoAppShare(BlogListActivity.this, blogModel, groupModel);
+                } else {
+                    navigator.navigateToOtherAppShare(BlogListActivity.this,
+                            blogModel.getTitle(), blogModel.getBlogUrl(), blogModel.getImageUrl());
+                }
+            }
+        });
+        builder.build().show();
+    }
+
+    @Override
+    public void onSignUpNavigate() {
+        this.navigator.navigateToUserMgmt(this);
+    }
+
+    @Override
+    public void onNeedsRatingView(String jsonBlog) {
+        this.navigator.navigateToRating(this, jsonBlog);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(Constants.VIEW_TAG, "Activity#Resume() currentItem:" + mViewPager.getCurrentItem());
+        BlogListFragment fragment = (BlogListFragment)mViewPagerAdapter
+                .getItem(mViewPager.getCurrentItem());
+
+        fragment.userVisibleWithResume();
     }
 
     private void setupTabLayout() {

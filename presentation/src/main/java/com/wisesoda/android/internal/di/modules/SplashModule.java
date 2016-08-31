@@ -3,6 +3,7 @@ package com.wisesoda.android.internal.di.modules;
 
 import com.wisesoda.android.internal.di.PerActivity;
 import com.wisesoda.domain.interactor.GetCityList;
+import com.wisesoda.domain.interactor.PostMobileInfo;
 import com.wisesoda.domain.interactor.UseCase;
 
 import javax.inject.Named;
@@ -20,4 +21,10 @@ public class SplashModule {
         return getCityList;
     }
 
+    @Provides
+    @PerActivity
+    @Named("mobileInfo")
+    UseCase providePostMobileInfoUseCase(PostMobileInfo postMobileInfo) {
+        return postMobileInfo;
+    }
 }

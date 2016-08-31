@@ -5,6 +5,7 @@
     <string name="title_acitivty_keywordlist">City</string>
 
     <string name="empty_keyword_title">죄송합니다. 검색 결과가 없습니다.\n추후에 다시 시도하세요.</string>
+    <string name="empty_bookmark_title">북마크한 블로그가 없습니다.</string>
 
     <string name="dialog_chrome_install_title">Chrome 을 설치 하겠습니까?</string>
     <string name="dialog_chrome_install_content">크롬을 설치해야지만 본 서비스를 이용하실 수 있습니다.</string>
@@ -23,7 +24,26 @@
     <string name="auth_login_googleplus">Log in with Goolge+</string>
     <string name="auth_login_wechat">Log in with WeChat</string>
 
+    <string name="nav_item_bookmark">북마크</string>
+    <string name="nav_item_signup">회원가입</string>
+    <string name="nav_item_settings">설정</string>
+    <string name="nav_item_help">도움말 및 의견</string>
 
-    <string name="kakao_app_key">02c85e7d89dcefea7501837b8b96480b</string>
-    <string name="facebook_app_id">893853507388036</string>
+    <string name="share_chooser_text">공유할 서비스를 선택하세요</string>
+    <string-array name="share_type_chooser">
+        <item>카카오톡 공유</item>
+        <item>다른 앱으로 공유</item>
+    </string-array>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="announce_permission_essential">죄송합니다. 실행을 위한 필수권한을 확인해주세요.</string>
+    <string name="announce_require_login">Sign up to save contents for later</string>
+
+    <string name="kakao_app_key">529ca5c5ca9eaa6fa73a7da38b08e43d</string>
+    <string name="kakao_scheme">kakao529ca5c5ca9eaa6fa73a7da38b08e43d</string>
+    <string name="kakaolink_host">kakaolink</string>
+    <string name="facebook_app_id">343361145995128</string>
+    <string name="app_id">ca-app-pub-1156466774086473~2762429145</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1156466774086473/4239162347</string>
 </resources>

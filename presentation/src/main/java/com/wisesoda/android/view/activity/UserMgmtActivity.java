@@ -59,7 +59,11 @@ public class UserMgmtActivity extends BaseActivity implements HasComponent<OAuth
     private void initializeActivity() {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
-        KakaoSDK.init(new KakaoSDKAdapter(getApplicationContext(), this));
+        try {
+            KakaoSDK.init(new KakaoSDKAdapter(getApplicationContext(), this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -18,10 +18,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -32,28 +29,27 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
 import com.wisesoda.android.internal.di.components.OAuthComponent;
-//import com.wisesoda.android.internal.di.components.OAuthComponent;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpFragment extends BaseFragment implements View.OnClickListener,
-        GoogleApiClient.OnConnectionFailedListener {
+public class SignUpFragment extends BaseFragment implements View.OnClickListener {
     private static final String TAG = SignUpFragment.class.getSimpleName();
     private static final int RC_GOOGLE_SIGN_IN = 9001;
 
     @BindView(R.id.kakao_login) ViewGroup mKakaoLogin;
     @BindView(R.id.facebook_login) ViewGroup mFacebookLoginFake;
-//    @BindView(R.id.google_login) ViewGroup mGoogleLogin;
-    @BindView(R.id.google_login)
-SignInButton mGoogleLogin;
+    @BindView(R.id.google_login) Button mGoogleLogin;
     @BindView(R.id.wechat_login) ViewGroup mWechatLogin;
 
     LoginButton mFacebookLogin;
 
-    GoogleApiClient mGoogleApiClient;
+    @Inject GoogleApiClient mGoogleApiClient;
 
     private SessionCallback mKakaocallback;
     private CallbackManager mFacebookCallbackManager;
@@ -106,23 +102,7 @@ SignInButton mGoogleLogin;
         mFacebookLogin.registerCallback(mFacebookCallbackManager, onFacebookCallback);
 
         // 구글 인증
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage((AppCompatActivity)getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        mGoogleLogin.setSize(SignInButton.SIZE_STANDARD);
-        mGoogleLogin.setScopes(gso.getScopeArray());
         mGoogleLogin.setOnClickListener(this);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
@@ -131,10 +111,12 @@ SignInButton mGoogleLogin;
 
         switch (id) {
             case R.id.kakao_login:
+                Log.d(Constants.VIEW_TAG, "카카오톡 로그인 실행");
                 mKakaocallback = new SessionCallback();
                 com.kakao.auth.Session.getCurrentSession().addCallback(mKakaocallback);
                 com.kakao.auth.Session.getCurrentSession().checkAndImplicitOpen();
                 com.kakao.auth.Session.getCurrentSession().open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN, getActivity());
+
                 break;
             case R.id.facebook_login:
                 mFacebookLogin.performClick();

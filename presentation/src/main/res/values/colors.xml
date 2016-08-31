@@ -3,7 +3,9 @@
     <color name="colorPrimary">#4DACC9</color>
     <color name="colorPrimaryDark">#014B61</color>
     <color name="colorPrimaryLight">#D4F5FF</color>
-    <color name="colorAccent">#012A37</color>
+    <!--<color name="colorAccent">#012A37</color>-->
+    <!--<color name="colorAccent">#b8b183</color>-->
+    <color name="colorAccent">#4DACC9</color>
     <color name="facebook">#3b5998</color>
     <color name="googleplus">#d34836</color>
     <color name="kakao">#FED90B</color>
