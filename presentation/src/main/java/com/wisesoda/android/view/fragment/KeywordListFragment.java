@@ -10,12 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
 import com.wisesoda.android.Constants;
 import com.wisesoda.android.R;
 import com.wisesoda.android.internal.di.components.DaggerGroupComponent;
 import com.wisesoda.android.internal.di.modules.GroupModule;
-import com.wisesoda.android.model.GroupModel;
 import com.wisesoda.android.model.KeywordModel;
 import com.wisesoda.android.model.constant.Category;
 import com.wisesoda.android.presenter.GroupListPresenter;
@@ -231,7 +229,7 @@ public class KeywordListFragment extends BaseFragment implements KeywordListView
                     emptyView.setIcoSrouceImage(R.drawable.ic_shopping_line);
                     break;
                 case TR:
-                    emptyView.setIcoSrouceImage(R.drawable.ic_bus_line);
+                    emptyView.setIcoSrouceImage(R.drawable.ic_transport_line);
                     break;
                 case SM:
                     emptyView.setIcoSrouceImage(R.drawable.ic_smartphone_line);

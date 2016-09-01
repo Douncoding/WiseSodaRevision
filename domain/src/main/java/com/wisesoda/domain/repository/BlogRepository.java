@@ -23,5 +23,6 @@ public interface BlogRepository {
                                  String sortType,
                                  int page);
 
-    Observable<Blog> blog(final int idBlog);
+
+    Observable<Blog> saveReadState(final int idBlog);
 }

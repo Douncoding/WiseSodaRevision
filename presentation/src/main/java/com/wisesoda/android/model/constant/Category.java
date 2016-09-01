@@ -26,7 +26,7 @@ public enum Category {
             case SH:
                 return R.drawable.ic_shopping_line;
             case TR:
-                return R.drawable.ic_bus_line;
+                return R.drawable.ic_transport_line;
             case SM:
                 return R.drawable.ic_smartphone_line;
         }

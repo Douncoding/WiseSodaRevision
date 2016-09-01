@@ -169,7 +169,6 @@ public class GroupListActivity extends BaseActivity implements
             case R.id.nav_settings:
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

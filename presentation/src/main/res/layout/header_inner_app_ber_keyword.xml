@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:tint="@color/colorDivider"
-            android:src="@drawable/ic_bus_line"
+            android:src="@drawable/ic_transport_line"
             android:background="@drawable/bg_circle_button_normal"/>
     </com.wisesoda.android.view.components.SquareLinearLayout>
 

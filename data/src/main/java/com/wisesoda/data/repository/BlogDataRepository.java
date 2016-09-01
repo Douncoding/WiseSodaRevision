@@ -43,11 +43,9 @@ public class BlogDataRepository implements BlogRepository {
                 });
     }
 
+
     @Override
-    public Observable<Blog> blog(int idBlog) {
+    public Observable<Blog> saveReadState(int idBlog) {
         return null;
     }
-
-
-
 }
